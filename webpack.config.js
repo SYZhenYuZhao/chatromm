@@ -1,50 +1,36 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-
-module.export = {
-
-    // entry:{
-    //     app:'./src/index.js',
-    //     vender:[
-    //         'react',
-    //         'react-dom',
-    //     ]
-    // },
-    // output:{
-    //     path: 'dist',
-    //     filename: env('[name].js', '[name].[' + hashType + '].js'),
-    //     publicPath: '/dist/',
-    //     chunkFilename: env('[name].js', '[name].[' + hashType + '].js')
-    // }
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            },
-            {
-                test: /\.html$/,
-                use: [{
-                    loader: "html-loader",
-                    options: {
-                        minimize: true
-                    }
-                }]
-            }
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+let webpack = require('webpack');
+module.exports = {
+    entry: {
+        app: './src/index.js',
+        vendor:[
+            "react",
+            "react-dom"
         ]
     },
-    plugins: [
-        new HtmlWebPackPlugin({
-            template: "./public/index.html",
-            filename: "./index.html"
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].js'
+    },
+    devServer:{
+        contentBase: './dist',
+        port: 3000,
+        compress: true, //服务器压缩
+        open: true,
+        hot: true,
+        disableHostCheck: true
+    },
+    plugins:[
+        new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin(['./dist']),
+        new HtmlWebpackPlugin({
+            template:'./index.html',
+            minify:{
+                removeAttributeQuotes:true, //删除属性的双引号
+                removeTagWhitespace:true
+            }
         })
-    ],
-    devServer: {
-        contentBase: require('path').join(__dirname, "dist"),
-        compress: true,
-        port: 8088,
-        host: "localhost",
-    }
+    ]
 }
