@@ -22,8 +22,28 @@ module.exports = {
         hot: true,
         disableHostCheck: true
     },
+    module:{
+        rules:[
+            {
+                test: /\.html$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        minimize: true
+                    }
+                }
+            },
+            {
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader'
+                },
+                exclude: /node_modules/
+            }
+        ]
+    },
     plugins:[
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin(), //热加载
         new CleanWebpackPlugin(['./dist']),
         new HtmlWebpackPlugin({
             template:'./index.html',
